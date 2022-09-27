@@ -13,27 +13,10 @@ public class BudgetSystem {
 
     public int query(LocalDate startDate, LocalDate endDate) {
         if (!validate(startDate, endDate)) {
-            return -1;
+            return 0;
         }
         return calculatorBudget(startDate, endDate);
     }
-
-    private int getBudgetByMonth(int year,Month month){
-        return service.queryAll().stream()
-                .filter(budget -> budget.getYear() == year && budget.getMonth() == month)
-                .findFirst().map(Budget::getAmount).orElse(0);
-    }
-
-    private int getBudgetFromMonthStartToCurrent(LocalDate startDate){
-        int currentMonthBudget = getBudgetByMonth(startDate.getYear(),startDate.getMonth());
-        return  (currentMonthBudget / startDate.lengthOfMonth()) * startDate.getDayOfMonth();
-    }
-
-    private int getBudgetFromCurrentToMonthEnd(LocalDate endDate){
-        int currentMonthBudget = getBudgetByMonth(endDate.getYear(), endDate.getMonth());
-        return  (currentMonthBudget / endDate.lengthOfMonth()) * (endDate.lengthOfMonth() - endDate.getDayOfMonth() + 1);
-    }
-
 
     private int calculatorBudget(LocalDate startDate, LocalDate endDate) {
         if (startDate.getYear() == endDate.getYear() && startDate.getMonth() == endDate.getMonth()) {
@@ -50,6 +33,22 @@ public class BudgetSystem {
 
         total += getBudgetFromMonthStartToCurrent(endDate);
         return total;
+    }
+
+    private int getBudgetByMonth(int year, Month month) {
+        return service.queryAll().stream()
+                .filter(budget -> budget.getYear() == year && budget.getMonth() == month)
+                .findFirst().map(Budget::getAmount).orElse(0);
+    }
+
+    private int getBudgetFromCurrentToMonthEnd(LocalDate endDate) {
+        int currentMonthBudget = getBudgetByMonth(endDate.getYear(), endDate.getMonth());
+        return (currentMonthBudget / endDate.lengthOfMonth()) * (endDate.lengthOfMonth() - endDate.getDayOfMonth() + 1);
+    }
+
+    private int getBudgetFromMonthStartToCurrent(LocalDate startDate) {
+        int currentMonthBudget = getBudgetByMonth(startDate.getYear(), startDate.getMonth());
+        return (currentMonthBudget / startDate.lengthOfMonth()) * startDate.getDayOfMonth();
     }
 
     private boolean validate(LocalDate startDate, LocalDate endDate) {

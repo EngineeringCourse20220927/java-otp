@@ -23,7 +23,7 @@ public class TestBudget {
 
         int budget = budgetSystem.query(startDate, endDate);
 
-        assertThat(budget).isLessThan(0);
+        assertThat(budget).isEqualTo(0);
     }
 
     @Test
