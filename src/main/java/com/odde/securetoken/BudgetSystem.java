@@ -23,7 +23,7 @@ public class BudgetSystem {
         LocalDate currentDate = period.getStartDate();
         while (currentDate.withDayOfMonth(1).isBefore(period.getEndDate())) {
             Budget budget = getBudget(YearMonth.from(currentDate));
-            total += budget.getDailyAmount() * getOverlappingPeriod(period, budget).getDayCount();
+            total += budget.getOverlappingAmount(period);
             currentDate = currentDate.plusMonths(1);
         }
         return total;
@@ -33,12 +33,6 @@ public class BudgetSystem {
         return service.queryAll().stream()
                 .filter(budget -> budget.getYearMonth().equals(yearMonth))
                 .findFirst().orElse(new Budget(yearMonth.getYear(), yearMonth.getMonth(), 0));
-    }
-
-    private Period getOverlappingPeriod(Period period, Budget budget) {
-        LocalDate overlappingStartDate = budget.getStartDate().isAfter(period.getStartDate()) ? budget.getStartDate() : period.getStartDate();
-        LocalDate overlappingEndDate = budget.getEndDate().isBefore(period.getEndDate()) ? budget.getEndDate() : period.getEndDate();
-        return new Period(overlappingStartDate, overlappingEndDate);
     }
 
 }

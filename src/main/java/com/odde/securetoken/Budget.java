@@ -42,4 +42,12 @@ public class Budget {
     public LocalDate getStartDate() {
         return getYearMonth().atDay(1);
     }
+
+    public Period getPeriod() {
+        return new Period(getStartDate(), getEndDate());
+    }
+
+    public int getOverlappingAmount(Period period) {
+        return getDailyAmount() * period.getOverlappingPeriod(getPeriod()).getDayCount();
+    }
 }
