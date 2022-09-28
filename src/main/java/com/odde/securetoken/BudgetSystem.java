@@ -1,6 +1,7 @@
 package com.odde.securetoken;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.YearMonth;
 
 public class BudgetSystem {
@@ -20,9 +21,8 @@ public class BudgetSystem {
 
     private int calculateBudget(LocalDate startDate, LocalDate endDate) {
         if (YearMonth.from(startDate).equals(YearMonth.from(endDate))) {
-            int days = endDate.getDayOfMonth() - startDate.getDayOfMonth() + 1;
-            Budget budget = getBudget(YearMonth.from(startDate));
-            return budget.getAmount() / budget.getYearMonth().lengthOfMonth() * days;
+            int days = Period.between(startDate, endDate).getDays() + 1;
+            return getBudget(YearMonth.from(startDate)).getDailyAmount() * days;
         }
         int total = 0;
         total += getBudgetFromCurrentToMonthEnd(startDate);
