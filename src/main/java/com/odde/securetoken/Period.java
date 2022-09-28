@@ -11,14 +11,6 @@ public class Period {
         this.endDate = endDate;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
     public int getDayCount() {
         if (startDate.isAfter(endDate)) {
             return 0;
@@ -27,8 +19,8 @@ public class Period {
     }
 
     public Period getOverlappingPeriod(Period budgetPeriod) {
-        LocalDate overlappingStartDate = budgetPeriod.getStartDate().isAfter(getStartDate()) ? budgetPeriod.getStartDate() : getStartDate();
-        LocalDate overlappingEndDate = budgetPeriod.getEndDate().isBefore(getEndDate()) ? budgetPeriod.getEndDate() : getEndDate();
+        LocalDate overlappingStartDate = budgetPeriod.startDate.isAfter(startDate) ? budgetPeriod.startDate : startDate;
+        LocalDate overlappingEndDate = budgetPeriod.endDate.isBefore(endDate) ? budgetPeriod.endDate : endDate;
         return new Period(overlappingStartDate, overlappingEndDate);
     }
 }
