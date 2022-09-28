@@ -1,6 +1,7 @@
 package com.odde.securetoken;
 
 import java.time.Month;
+import java.time.YearMonth;
 
 public class Budget {
     private int year;
@@ -23,5 +24,9 @@ public class Budget {
 
     public int getAmount() {
         return amount;
+    }
+
+    public YearMonth getYearMonth() {
+        return YearMonth.of(year, month);
     }
 }
