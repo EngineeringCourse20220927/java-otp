@@ -21,13 +21,14 @@ public class BudgetSystem {
     private int calculateBudget(LocalDate startDate, LocalDate endDate) {
         if (YearMonth.from(startDate).equals(YearMonth.from(endDate))) {
             int days = endDate.getDayOfMonth() - startDate.getDayOfMonth() + 1;
-            return getBudgetByMonth(YearMonth.from(startDate)) / startDate.lengthOfMonth() * days;
+            Budget budget = getBudget(YearMonth.from(startDate));
+            return budget.getAmount() / budget.getYearMonth().lengthOfMonth() * days;
         }
         int total = 0;
         total += getBudgetFromCurrentToMonthEnd(startDate);
         LocalDate currentDate = startDate.plusMonths(1);
         while (currentDate.withDayOfMonth(1).isBefore(endDate.withDayOfMonth(1))) {
-            total += getBudgetByMonth(YearMonth.from(currentDate));
+            total += getBudget(YearMonth.from(currentDate)).getAmount();
             currentDate = currentDate.plusMonths(1);
         }
 
@@ -35,19 +36,19 @@ public class BudgetSystem {
         return total;
     }
 
-    private int getBudgetByMonth(YearMonth yearMonth) {
+    private Budget getBudget(YearMonth yearMonth) {
         return service.queryAll().stream()
                 .filter(budget -> budget.getYearMonth().equals(yearMonth))
-                .findFirst().map(Budget::getAmount).orElse(0);
+                .findFirst().orElse(new Budget(yearMonth.getYear(), yearMonth.getMonth(), 0));
     }
 
     private int getBudgetFromCurrentToMonthEnd(LocalDate startDate) {
-        int currentMonthBudget = getBudgetByMonth(YearMonth.from(startDate));
+        int currentMonthBudget = getBudget(YearMonth.from(startDate)).getAmount();
         return (currentMonthBudget / startDate.lengthOfMonth()) * (startDate.lengthOfMonth() - startDate.getDayOfMonth() + 1);
     }
 
     private int getBudgetFromMonthStartToCurrent(LocalDate endDate) {
-        int currentMonthBudget = getBudgetByMonth(YearMonth.from(endDate));
+        int currentMonthBudget = getBudget(YearMonth.from(endDate)).getAmount();
         return (currentMonthBudget / endDate.lengthOfMonth()) * endDate.getDayOfMonth();
     }
 
