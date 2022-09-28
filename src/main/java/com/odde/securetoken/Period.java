@@ -20,6 +20,9 @@ public class Period {
     }
 
     public int getDayCount() {
+        if (startDate.isAfter(endDate)) {
+            return 0;
+        }
         return java.time.Period.between(startDate, endDate).getDays() + 1;
     }
 

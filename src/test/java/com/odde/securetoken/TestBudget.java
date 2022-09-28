@@ -117,7 +117,7 @@ public class TestBudget {
                         continue;
                     }
                     budgetList.add(new Budget(current.getYear(), current.getMonth(), current.getMonth() == Month.MAY ? 0 : current.lengthOfMonth()));
-                    current = current.plusDays(1);
+                    current = current.plusMonths(1);
                 }
                 return budgetList;
             }
