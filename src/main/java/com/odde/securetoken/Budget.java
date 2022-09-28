@@ -1,5 +1,6 @@
 package com.odde.securetoken;
 
+import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
 
@@ -32,5 +33,13 @@ public class Budget {
 
     public int getDailyAmount() {
         return amount / getYearMonth().lengthOfMonth();
+    }
+
+    public LocalDate getEndDate() {
+        return getYearMonth().atEndOfMonth();
+    }
+
+    public LocalDate getStartDate() {
+        return getYearMonth().atDay(1);
     }
 }
