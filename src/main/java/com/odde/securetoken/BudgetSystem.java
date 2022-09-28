@@ -26,7 +26,7 @@ public class BudgetSystem {
         int total = 0;
         total += getBudgetFromCurrentToMonthEnd(startDate);
         LocalDate currentDate = startDate.plusMonths(1);
-        while (LocalDate.of(currentDate.getYear(), currentDate.getMonth(), 1).isBefore(LocalDate.of(endDate.getYear(), endDate.getMonth(), 1))) {
+        while (currentDate.withDayOfMonth(1).isBefore(endDate.withDayOfMonth(1))) {
             total += getBudgetByMonth(YearMonth.from(currentDate));
             currentDate = currentDate.plusMonths(1);
         }
@@ -41,14 +41,14 @@ public class BudgetSystem {
                 .findFirst().map(Budget::getAmount).orElse(0);
     }
 
-    private int getBudgetFromCurrentToMonthEnd(LocalDate endDate) {
-        int currentMonthBudget = getBudgetByMonth(YearMonth.from(endDate));
-        return (currentMonthBudget / endDate.lengthOfMonth()) * (endDate.lengthOfMonth() - endDate.getDayOfMonth() + 1);
+    private int getBudgetFromCurrentToMonthEnd(LocalDate startDate) {
+        int currentMonthBudget = getBudgetByMonth(YearMonth.from(startDate));
+        return (currentMonthBudget / startDate.lengthOfMonth()) * (startDate.lengthOfMonth() - startDate.getDayOfMonth() + 1);
     }
 
-    private int getBudgetFromMonthStartToCurrent(LocalDate startDate) {
-        int currentMonthBudget = getBudgetByMonth(YearMonth.from(startDate));
-        return (currentMonthBudget / startDate.lengthOfMonth()) * startDate.getDayOfMonth();
+    private int getBudgetFromMonthStartToCurrent(LocalDate endDate) {
+        int currentMonthBudget = getBudgetByMonth(YearMonth.from(endDate));
+        return (currentMonthBudget / endDate.lengthOfMonth()) * endDate.getDayOfMonth();
     }
 
 }
